@@ -1,0 +1,23 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ],
+  "compilerOptions": {
+    "allowJs": true,
+    "composite": true,
+    "baseUrl": ".",
+    "outDir": "./dist/",
+    "paths": {
+      "@/*": ["./src/*"],
+      "~/*": ["./*"]
+    },
+    "typeRoots": ["node_modules/@types"],
+    "types": ["element-plus/global", "axios"]
+  }
+}
