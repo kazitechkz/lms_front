@@ -1,6 +1,6 @@
 // src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router';
-import { isAuthenticated } from '@/presentation/utils/authGuard';
+import {isAdmin, isAuthenticated, isUser} from '@/presentation/utils/authGuard';
 import authRoutes from "@/presentation/router/auth.ts";
 import adminRoutes from "@/presentation/router/admin.ts";
 
@@ -22,10 +22,25 @@ const router = createRouter({
 
 // Глобальный навигационный guard
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) {
-    next('/login'); // Перенаправление на страницу входа
-  } else {
-    next(); // Разрешить переход
+  const isAuth = isAuthenticated();
+
+  if (to.meta.requiresAuth && !isAuth) {
+    console.log(`Unauthenticated user trying to access ${to.path}. Redirecting to /login.`);
+    next('/login');
+  }
+  else if (to.name === 'Login' && isAuth) {
+    console.log(`Authenticated user trying to access ${to.path}. Redirecting to appropriate route.`);
+
+    if (isAdmin()) {
+      next('/admin/dashboard');
+    } else if (isUser()) {
+      next('/user/home');
+    } else {
+      next('/dashboard');
+    }
+  }
+  else {
+    next();
   }
 });
 

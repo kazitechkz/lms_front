@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia';
-import type {RoleEntity} from "@/domain/entities/RoleEntity.ts";
+import type {Role} from "@/domain/entities/Role.ts";
 
 export const useRoleStore = defineStore('role', {
     state: () => ({
-        roles: [] as RoleEntity[],
-        role: null as RoleEntity | null,
+        roles: [] as Role[],
+        role: null as Role | null,
         isLoading: false,
         error: null as string | null,
     }),
@@ -14,10 +14,10 @@ export const useRoleStore = defineStore('role', {
     },
 
     actions: {
-        setRoles(roles: RoleEntity[]): void {
+        setRoles(roles: Role[]): void {
             this.roles = roles;
         },
-        setRole(role: RoleEntity | null): void {
+        setRole(role: Role | null): void {
             this.role = role;
         },
         setLoading(isLoading: boolean): void {

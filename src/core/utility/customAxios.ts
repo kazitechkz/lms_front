@@ -7,7 +7,7 @@ export interface InternalAxiosRequestConfig<D = any> extends AxiosRequestConfig<
 }
 
 class CustomAxios {
-    private axiosInstance: AxiosInstance;
+    private readonly axiosInstance: AxiosInstance;
 
     constructor({ token, userId }: { token?: string | null, userId?: string | null } = {}) {
         this.axiosInstance = axios.create({
@@ -17,10 +17,9 @@ class CustomAxios {
 
         this.axiosInstance.interceptors.request.use(
             (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-                // Add any request headers or other configurations here
+                const token = localStorage.getItem('authToken')?.replace(/^"|"$/g, ''); // Получаем токен из localStorage
                 if (token) {
                     config.headers['Authorization'] = `Bearer ${token}`;
-                    config.headers['user-id'] = userId;
                 }
                 return config;
             },

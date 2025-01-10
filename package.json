@@ -13,13 +13,17 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.2.0",
+    "@nuxt/types": "^2.18.1",
     "axios": "^1.7.9",
+    "flowbite": "^2.5.2",
     "js-base64": "^3.7.7",
     "moment": "2.29.4",
     "pinia": "^2.3.0",
+    "vee-validate": "^4.15.0",
     "vue": "^3.5.13",
     "vue-i18n": "^10.0.5",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",

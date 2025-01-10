@@ -1,4 +1,6 @@
-import type {Role} from "@/domain/entities/RoleEntity.ts";
+import type {Role} from "@/domain/entities/Role.ts";
+import type {UserType} from "@/domain/entities/UserType.ts";
+import type {FileEntity} from "@/domain/entities/File.ts";
 
 export interface User {
     id: number;
@@ -6,13 +8,12 @@ export interface User {
     email: string;
     phone: string;
     position?: string | null;
-    password_hash: string;
-    is_active: boolean;
-    role_id?: number | null;
-    role?: Role | null;
-    user_type_id?: number | null;
-    user_type?: UserType | null;
-    created_at: string; // или Date
-    updated_at: string; // или Date
-    uploaded_files: FileModel[];
+    isActive: boolean;
+    roleId: number;
+    role: Role;
+    userTypeId: number;
+    userType: UserType;
+    createdAt: string;
+    updatedAt: string;
+    fileId: FileEntity | null;
 }

@@ -54,6 +54,7 @@
               >Username Or Email</label
               >
               <input
+                  v-model="email"
                   id="email"
                   type="email"
                   placeholder="Name"
@@ -65,6 +66,7 @@
               >Password</label
               >
               <input
+                  v-model="password"
                   id="password"
                   type="password"
                   placeholder="Password"
@@ -105,20 +107,33 @@ import {ref, computed} from 'vue';
 import {Menu, MenuButton, MenuItem, MenuItems} from "@headlessui/vue";
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 import {localeBloc} from "@/presentation/bloc/localeBloc/LocaleBloc.ts";
+import {dependencyLocator} from "@/core/dependicies/dependencyLocator.ts";
+import {object, string} from "yup";
+import type {LoginCDTO} from "@/data/dto/AuthDTO.ts";
 
 
 const locale = computed(() => localeBloc.getState().locale);
-const username = ref('');
+const email = ref('');
 const password = ref('');
 
 let menuOpen = ref(false);
 
+const authPloc = dependencyLocator.provideAuthPloc();
+
+const schema = object().shape({
+  email: string().required().email(),
+  password: string().required(),
+});
 function changeLanguage(newLocale: "ru" | "kk" = "ru"): void {
   localeBloc.setLocale(newLocale);
 }
 
 async function submitLogin(): Promise<void> {
-  console.log("Login form submitted!");
+  let dto: LoginCDTO = {
+    email: email.value,
+    password: password.value,
+  }
+  await authPloc.login(dto)
 }
 </script>
 

@@ -4,6 +4,7 @@ export default {
     // Example content paths...
     './public/**/*.html',
     './src/**/*.{js,jsx,ts,tsx,vue}',
+    "./node_modules/flowbite/**/*.{js,ts}"
   ],
   theme: {
     extend: {
@@ -12,6 +13,8 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin')
+  ],
 }
 

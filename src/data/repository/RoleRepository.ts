@@ -1,5 +1,5 @@
 import type {RoleInterface} from "@/domain/interfaces/RoleInterface.ts";
-import type {RoleEntity} from "@/domain/entities/RoleEntity.ts";
+import type {Role} from "@/domain/entities/Role.ts";
 import {BaseRepository} from "@/core/data/BaseRepository.ts";
 import type CustomAxios from "@/core/utility/customAxios.ts";
 import {Either} from "@/core/domain/Either.ts";
@@ -14,7 +14,7 @@ export class RoleRepository extends BaseRepository implements RoleInterface {
         super({ axios });
     };
 
-    async getAll(): Promise<Either<DataError, RoleEntity[]>> {
+    async getAll(): Promise<Either<DataError, Role[]>> {
         try {
             const { data } = await this.axios.get('role');
             const roles = data.map((roleData: any) => RoleModel.fromJson(roleData).toDomain());
@@ -24,7 +24,7 @@ export class RoleRepository extends BaseRepository implements RoleInterface {
         }
     }
 
-    async getRoleById(id: number): Promise<Either<DataError, RoleEntity>> {
+    async getRoleById(id: number): Promise<Either<DataError, Role>> {
         try {
             const { data } = await this.axios.get('role/get/' + id);
             const role = RoleModel.fromJson(data).toDomain();
