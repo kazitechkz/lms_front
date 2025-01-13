@@ -1,15 +1,15 @@
-import type {LoginResponse} from "@/domain/entities/Auth.ts";
 import {UserModel} from "@/data/models/UserModel.ts";
+import type {LoginRDTO} from "@/data/dto/AuthDTO.ts";
 
 export class LoginModel {
-    public data: LoginResponse;
+    public data: LoginRDTO;
 
-    constructor(data: LoginResponse) {
+    constructor(data: LoginRDTO) {
         this.data = data;
     }
 
     static fromJson(json: any): LoginModel {
-        const entity: LoginResponse = {
+        const entity: LoginRDTO = {
             accessToken: json.access_token,
             refreshToken: json.refresh_token,
             type: json.type,

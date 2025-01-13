@@ -4,8 +4,8 @@ import type {AuthInterface} from "@/domain/interfaces/AuthInterface.ts";
 import type {LoginCDTO} from "@/data/dto/AuthDTO.ts";
 import {Either} from "@/core/domain/Either.ts";
 import type {DataError} from "@/core/domain/DataError.ts";
-import type {LoginResponse} from "@/domain/entities/Auth.ts";
 import {LoginModel} from "@/data/models/AuthModel.ts";
+import type {LoginRDTO} from "@/data/dto/AuthDTO.ts";
 
 export class AuthRepository extends BaseRepository implements AuthInterface {
     constructor({ axios }: { axios: CustomAxios }) {
@@ -15,7 +15,7 @@ export class AuthRepository extends BaseRepository implements AuthInterface {
         super({ axios });
     };
 
-    async login(payload: LoginCDTO): Promise<Either<DataError, LoginResponse>> {
+    async login(payload: LoginCDTO): Promise<Either<DataError, LoginRDTO>> {
         try {
             const { data } = await this.axios.post('/auth/login', payload);
             const result = LoginModel.fromJson(data);

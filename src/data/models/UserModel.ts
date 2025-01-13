@@ -1,7 +1,7 @@
-import type {Role} from "@/domain/entities/Role.ts";
-import type {UserType} from "@/domain/entities/UserType.ts";
 import {RoleModel} from "@/data/models/RoleModel.ts";
 import {UserTypeModel} from "@/data/models/UserTypeModel.ts";
+import type {RoleRDTO} from "@/data/dto/RoleDTO.ts";
+import type {UserTypeRDTO} from "@/data/dto/UserTypeDTO.ts";
 
 export class UserModel {
     public id: number;
@@ -19,14 +19,14 @@ export class UserModel {
 
     constructor(data: {
         userTypeId: any;
-        role: Role | null;
+        role: RoleRDTO | null;
         roleId: any;
         isActive: any;
         createdAt: Date;
         phone: any;
         titleEn: any;
         name: any;
-        userType: UserType | null;
+        userType: UserTypeRDTO | null;
         id: any;
         position: any;
         email: any;

@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
-import type {User} from "@/domain/entities/User.ts";
+import type {UserRDTO} from "@/data/dto/UserDTO.ts";
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        user: null as User | null,
+        user: null as UserRDTO | null,
         isLoading: false,
         error: null as string | null
     }),

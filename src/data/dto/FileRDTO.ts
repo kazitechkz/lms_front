@@ -1,6 +1,6 @@
-import type { User } from "@/domain/entities/User";
+import {UserRDTO} from "@/data/dto/UserDTO.ts";
 
-export interface FileEntity {
+export interface FileRDTO {
     id: number;
     filename: string;
     filePath: string;
@@ -10,5 +10,5 @@ export interface FileEntity {
     createdAt: Date;
     updatedAt: Date;
     uploadedBy: number | null;
-    uploadedByUser: User | null;
+    uploadedByUser: UserRDTO | null;
 }

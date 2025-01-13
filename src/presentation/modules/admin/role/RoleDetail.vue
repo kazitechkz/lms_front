@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
-import type {Role} from "@/domain/entities/Role.ts";
 import {dependencyLocator} from "@/core/dependicies/dependencyLocator.ts";
 import {useRoute} from "vue-router";
+import type {RoleRDTO} from "@/data/dto/RoleDTO.ts";
 
-let role = ref<Role|null>(null);
+let role = ref<RoleRDTO|null>(null);
 let error = ref<string|null>("");
 let roleBloc = dependencyLocator.provideRolePloc()
 let route = useRoute();

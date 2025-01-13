@@ -1,4 +1,4 @@
-export interface UserType {
+export interface UserTypeRDTO {
     id: number;
     titleRu: string;
     titleKk: string;

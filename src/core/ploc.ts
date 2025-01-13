@@ -21,12 +21,16 @@ export class ploc<T> {
                 const serverError = error as Extract<DataError, { kind: "ServerError" }>;
                 err = serverError.error.message;
                 break;
+            case "ValidationError":
+                const validationError = error as Extract<DataError, { kind: "ValidationError" }>;
+                err = validationError.error.message;
+                break;
             case "ErrorFold":
                 const errorDataArray = error as ErrorFold;
                 err = errorDataArray.error[0].message;
                 break;
             case "AuthenticationError":
-                this.router.push({name: 'AuthLogin'});
+                this.router.push({name: 'Login'});
                 break;
             default:
                 err = 'An Error Occurred';

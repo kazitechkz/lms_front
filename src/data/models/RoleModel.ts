@@ -1,4 +1,4 @@
-import type {Role} from "@/domain/entities/Role.ts";
+import type {RoleCDTO, RoleRDTO} from "@/data/dto/RoleDTO.ts";
 
 export class RoleModel {
     public id: number;
@@ -9,9 +9,9 @@ export class RoleModel {
     public isAdmin: boolean;
     public createdAt: Date;
     public updatedAt: Date;
-    public titleEn: string | undefined;
+    public titleEn: string | null | undefined;
 
-    constructor(data: Role) {
+    constructor(data: RoleRDTO) {
         this.id = data.id;
         this.titleRu = data.titleRu;
         this.titleKk = data.titleKk;
@@ -48,6 +48,17 @@ export class RoleModel {
             createdAt: this.createdAt,
             updatedAt: this.updatedAt,
             titleEn: this.titleEn,
+        };
+    }
+
+    public toServer(): RoleCDTO {
+        return {
+            titleRu: this.titleRu,
+            titleKk: this.titleKk,
+            titleEn: this.titleEn || null,
+            canRegister: this.canRegister,
+            isAdmin: this.isAdmin,
+            value: this.value,
         };
     }
 }

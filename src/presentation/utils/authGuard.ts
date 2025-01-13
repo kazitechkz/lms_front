@@ -1,30 +1,23 @@
-// src/presentation/utility/authGuard.ts
-
 export function isAuthenticated(): boolean {
-    const token = localStorage.getItem('authToken'); // Пример проверки
-    return !!token; // Возвращает true, если токен существует
+    const token = localStorage.getItem('authToken');
+    return !!token; // Проверка наличия токена
 }
 
 export function isAdmin(): boolean {
-    const token = localStorage.getItem('userData');
-    if (!token) return false;
-
-    try {
-        const payload = JSON.parse(token);
-        return payload.roleId === 1;
-    } catch (e) {
-        return false;
-    }
+    const userData = getUserData();
+    return userData?.roleId === 1;
 }
 
 export function isUser(): boolean {
-    const token = localStorage.getItem('userData');
-    if (!token) return false;
+    const userData = getUserData();
+    return userData?.roleId === 2;
+}
 
+function getUserData() {
+    const token = localStorage.getItem('userData');
     try {
-        const payload = JSON.parse(token);
-        return payload.roleId === 2; // Проверяем, является ли роль user
+        return JSON.parse(token || '{}');
     } catch (e) {
-        return false;
+        return null;
     }
 }

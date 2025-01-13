@@ -37,7 +37,6 @@ export class AuthBloc extends ploc<AuthStore> {
     }
 
     private redirectBasedOnRole(roleId: number): void {
-        console.log(roleId)
         if (roleId === 1) {
             this.router.push('/admin/dashboard'); // Перенаправление для админа
         } else if (roleId === 2) {

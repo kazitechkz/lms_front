@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosRequestHeaders } from 'axios';
 import { NetworkConstants } from './NetworkConstants';
+import router from "@/presentation/router";
 
 export interface InternalAxiosRequestConfig<D = any> extends AxiosRequestConfig<D> {
     headers: AxiosRequestHeaders;
@@ -9,7 +10,7 @@ export interface InternalAxiosRequestConfig<D = any> extends AxiosRequestConfig<
 class CustomAxios {
     private readonly axiosInstance: AxiosInstance;
 
-    constructor({ token, userId }: { token?: string | null, userId?: string | null } = {}) {
+    constructor({ token }: { token?: string | null } = {}) {
         this.axiosInstance = axios.create({
             baseURL: NetworkConstants.BASE_URL,
             timeout: 5000,
@@ -36,8 +37,16 @@ class CustomAxios {
             },
             (error) => {
                 if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
+                    if (error.response.status === 401) {
+                        // Remove the token from localStorage
+                        localStorage.removeItem('authToken');
+                        localStorage.removeItem('userData');
+
+                         // Redirect to the login page or perform necessary actions
+                        router.push('/login');
+                        // Redirect to the login page or perform necessary actions
+                        router.push('/login');
+                    }
                 } else if (error.request) {
                     // The request was made but no response was received
                 } else {

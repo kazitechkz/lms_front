@@ -1,7 +1,4 @@
-import type {User} from "@/domain/entities/User.ts";
-import type {Role} from "@/domain/entities/Role.ts";
-import type {UserType} from "@/domain/entities/UserType.ts";
-import {RoleModel} from "@/data/models/RoleModel.ts";
+import type {UserTypeRDTO} from "@/data/dto/UserTypeDTO.ts";
 
 export class UserTypeModel {
     public id: number;
@@ -12,7 +9,7 @@ export class UserTypeModel {
     public updatedAt: Date;
     public titleEn: string | null;
 
-    constructor(data: UserType) {
+    constructor(data: UserTypeRDTO) {
         this.id = data.id;
         this.titleRu = data.titleRu;
         this.titleKk = data.titleKk;

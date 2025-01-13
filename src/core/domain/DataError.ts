@@ -9,6 +9,11 @@ export interface ServerError {
     errorCode: number;
 }
 
+export interface ValidationError {
+    kind: "ValidationError";
+    error: Error;
+}
+
 export interface AuthenticationError {
     kind: "AuthenticationError";
     error: Error;
@@ -26,4 +31,4 @@ export interface ErrorFold {
 }
 
 
-export type DataError = UnexpectedError | ServerError | AuthenticationError | ErrorFold;
+export type DataError = UnexpectedError | ServerError | AuthenticationError | ErrorFold | ValidationError;

@@ -5,7 +5,8 @@
       <div v-if="icon" class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
         <span v-html="icon"></span>
       </div>
-      <input :required="required" :disabled="disabled" :placeholder="placeholder" :class="error != '' ? 'bg-red-50 border-red-500 text-red-900 dark:text-red-400 placeholder-red-700 dark:placeholder-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : ''" type="text" class="border text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700">
+      <input :value="modelValue"
+             @input="$emit('update:modelValue', $event.target?.value)" :required="required" :disabled="disabled" :placeholder="placeholder" :class="error != '' ? 'bg-red-50 border-red-500 text-red-900 dark:text-red-400 placeholder-red-700 dark:placeholder-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : ''" type="text" class="border text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700">
       <p v-if="error" class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">{{ error }}</span></p>
     </div>
 
@@ -13,7 +14,12 @@
 </template>
 
 <script setup lang="ts">
-  defineProps({
+
+defineProps({
+    modelValue: {
+      type: String,
+      required: false
+    },
     label: {
       type: String,
       required: false
@@ -45,6 +51,6 @@
     error: {
       type: String,
       default: ''
-    }
+    },
   })
 </script>
