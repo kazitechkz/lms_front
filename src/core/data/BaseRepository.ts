@@ -16,7 +16,10 @@ export class BaseRepository {
             const { status, data } = error.response;
 
             if (status >= 401 && status <= 403) {
-                return { kind: 'AuthenticationError', error: new Error('Token has expired, kindly login again') };
+                if (data.detail.message) {
+                    this.toast.error(data.detail.message)
+                }
+                return { kind: 'AuthenticationError', error: new Error(data.detail.message ? data.detail.message : 'Token has expired, kindly login again') };
             }
 
             if (status == 400) {

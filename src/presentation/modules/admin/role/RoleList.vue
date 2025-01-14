@@ -9,7 +9,12 @@ import {boolean, object, string} from "yup";
 import type {RoleCDTO, RoleRDTO} from "@/data/dto/RoleDTO.ts";
 import ToggleButton from "@/presentation/components/shared/ToggleButton.vue";
 import {transliterateToLatin} from "@/presentation/utils/converter.ts";
+import type {PermissionRDTO, RolePermissionCDTO} from "@/data/dto/RolePermissionDTO.ts";
+import CheckboxButton from "@/presentation/components/shared/CheckboxButton.vue";
 
+let selectedPermissions = reactive<Record<number, boolean>>({});
+let permissionsByRole = ref<PermissionRDTO[]>([])
+let permissions = ref<PermissionRDTO[]>([])
 let roles = ref<RoleRDTO[]>([]);
 let error = reactive<Record<string, string>>({});
 let updateModal = ref(false);
@@ -17,7 +22,9 @@ let roleID = ref<number>(0);
 let modalTitle = ref<string>("Создание новой роли");
 let modalButton = ref<string>("Сохранить");
 let roleBloc = dependencyLocator.provideRolePloc()
+let rolePermissionBloc = dependencyLocator.provideRolePermissionPloc()
 const isModalOpen = ref(false);
+const isPermissionModalOpen = ref(false);
 const formData = reactive({
   titleKk: "",
   titleRu: "",
@@ -33,6 +40,18 @@ const schema = object().shape({
   canRegister: boolean()
 })
 
+async function addPermissionModal(roleId: number) {
+  roleID.value = roleId;
+  await rolePermissionBloc.getPermissionsByRole(roleId)
+  permissionsByRole.value = rolePermissionBloc.store.permissionsByRole
+  selectedPermissions = reactive(
+      permissionsByRole.value.reduce((acc:any, permission:any) => {
+        acc[permission.id] = true; // Установите флаг для каждого разрешения
+        return acc;
+      }, {} as Record<number, boolean>)
+  );
+  isPermissionModalOpen.value = true
+}
 function openNewModal() {
   updateModal.value = false
   modalTitle.value = "Создание новой роли";
@@ -115,11 +134,27 @@ const handleDelete = async (id: number) => {
 
 function closeModal(): void {
   isModalOpen.value = false;
+  isPermissionModalOpen.value = false;
 }
 
 const initialData = async () => {
   await roleBloc.loadRoles();
+  await rolePermissionBloc.getPermissions();
+  permissions.value = rolePermissionBloc.store.permissions
   roles.value = roleBloc.store.roles;
+}
+
+async function saveRolePermissions() {
+  const selected = Object.entries(selectedPermissions)
+      .filter(([_, isSelected]) => isSelected)
+      .map(([id]) => Number(id));
+  const dto: RolePermissionCDTO = {
+    roleId: roleID.value, // ID текущей роли
+    permissionIds: selected, // Список выбранных разрешений
+  };
+  await rolePermissionBloc.createRolePermissions(dto)
+  closeModal()
+  await initialData()
 }
 
 function clearFormData() {
@@ -181,6 +216,7 @@ onMounted(async () => {
         </td>
         <td class="px-6 py-4">
           <div class="flex">
+            <IconButton type="plus" @click="addPermissionModal(role.id)"/>
             <IconButton type="edit" @click="editRoleModal(role.id)"/>
             <IconButton @click="handleDelete(role.id)" type="delete"/>
           </div>
@@ -203,6 +239,39 @@ onMounted(async () => {
           <ToggleButton label="Возможность регистрироваться" v-model="formData.canRegister" />
           <ToggleButton label="Админ" v-model="formData.isAdmin" />
         </Form>
+      </template>
+    </Modal>
+
+    <Modal title="Добавление прав" :on-close="closeModal" :is-open="isPermissionModalOpen">
+      <template #body>
+        <div id="dropdownSearch" class="z-10 bg-white rounded-lg shadow w-full dark:bg-gray-700">
+          <div class="p-3">
+            <label for="input-group-search" class="sr-only">Поиск</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+              </div>
+              <input type="text" id="input-group-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search user">
+            </div>
+          </div>
+          <ul class="h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownSearchButton">
+            <li v-for="permission in permissions">
+              <CheckboxButton
+                  :model-value="selectedPermissions[permission.id] || false"
+                  @update:model-value="(value:any) => selectedPermissions[permission.id] = value"
+                  :label="permission.titleRu"
+                  :item-id="permission.id"/>
+            </li>
+          </ul>
+          <a @click="saveRolePermissions" href="#" class="flex items-center p-3 text-sm font-medium text-gray-600 border-t border-gray-200 rounded-b-lg bg-gray-50 dark:border-gray-600 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-500 hover:underline">
+            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+            </svg>
+            Сохранить
+          </a>
+        </div>
       </template>
     </Modal>
   </div>

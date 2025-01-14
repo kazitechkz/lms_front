@@ -2,6 +2,7 @@ import axios from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosRequestHeaders } from 'axios';
 import { NetworkConstants } from './NetworkConstants';
 import router from "@/presentation/router";
+import {useToast} from "vue-toast-notification";
 
 export interface InternalAxiosRequestConfig<D = any> extends AxiosRequestConfig<D> {
     headers: AxiosRequestHeaders;
@@ -9,6 +10,7 @@ export interface InternalAxiosRequestConfig<D = any> extends AxiosRequestConfig<
 
 class CustomAxios {
     private readonly axiosInstance: AxiosInstance;
+    public toast = useToast({position: "top-right"});
 
     constructor({ token }: { token?: string | null } = {}) {
         this.axiosInstance = axios.create({
@@ -41,11 +43,14 @@ class CustomAxios {
                         // Remove the token from localStorage
                         localStorage.removeItem('authToken');
                         localStorage.removeItem('userData');
-
-                         // Redirect to the login page or perform necessary actions
-                        router.push('/login');
                         // Redirect to the login page or perform necessary actions
                         router.push('/login');
+                    }
+                    if (error.response.status === 403) {
+                        if (error.response.data.detail) {
+                            this.toast.error(error.response.data.detail)
+                        }
+                        router.push({name: 'NotFound'});
                     }
                 } else if (error.request) {
                     // The request was made but no response was received

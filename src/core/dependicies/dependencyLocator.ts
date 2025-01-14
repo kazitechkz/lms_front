@@ -8,6 +8,10 @@ import {useAuthStore} from "@/presentation/bloc/authBloc/AuthState.ts";
 import {AuthRepository} from "@/data/repository/AuthRepository.ts";
 import {LoginUseCase} from "@/domain/use-cases/auth/LoginUseCase.ts";
 import {AuthBloc} from "@/presentation/bloc/authBloc/AuthBloc.ts";
+import {RolePermissionRepository} from "@/data/repository/RolePermissionRepository.ts";
+import {GetRolePermissionsUseCase} from "@/domain/use-cases/role-permission/GetRolePermissionsUseCase.ts";
+import {RolePermissionBloc} from "@/presentation/bloc/rolePermissionBloc/RolePermissionBloc.ts";
+import {useRolePermissionStore} from "@/presentation/bloc/rolePermissionBloc/RolePermissionState.ts";
 
 const provAxiosInstance = () => {
     const token = localStorage.getItem('token');
@@ -33,8 +37,17 @@ const provideAuthPloc = () => {
     const loginUseCase = new LoginUseCase({authRepo: authRepository});
     return new AuthBloc({loginUseCase: loginUseCase, router: router, store: store});
 }
+const provideRolePermissionPloc = () => {
+    const router = useRouter();
+    const store = useRolePermissionStore();
+    const axios = provAxiosInstance();
+    const rolePermissionRepository = new RolePermissionRepository({axios: axios});
+    const getRolePermissionsUseCase = new GetRolePermissionsUseCase({rolePermissionRepo: rolePermissionRepository});
+    return new RolePermissionBloc({getRolePermissionsUseCase: getRolePermissionsUseCase, router: router, store: store});
+}
 
 export const dependencyLocator = {
     provideRolePloc,
     provideAuthPloc,
+    provideRolePermissionPloc
 }

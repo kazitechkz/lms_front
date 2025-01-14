@@ -13,6 +13,11 @@ const routes = [
     component: () => import('@/presentation/modules/Dashboard.vue'), // Lazy Loading
     meta: { requiresAuth: true }, // Защищенный маршрут
   },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: () => import('@/presentation/modules/NotFound.vue'),
+  },
 ];
 
 const router = createRouter({

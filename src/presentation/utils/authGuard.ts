@@ -5,12 +5,12 @@ export function isAuthenticated(): boolean {
 
 export function isAdmin(): boolean {
     const userData = getUserData();
-    return userData?.roleId === 1;
+    return userData?.roleId >= 1 && userData?.roleId <= 4;
 }
 
 export function isUser(): boolean {
     const userData = getUserData();
-    return userData?.roleId === 2;
+    return userData?.roleId === 5;
 }
 
 function getUserData() {
